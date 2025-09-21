@@ -2,12 +2,24 @@ public class Rot13 {
     private static char[] abecedariMinuscules = "aàábcçdeèéfghiïíjklmnñoòópqrstuüúvwxyz".toCharArray();
     private static char[] abecedariMajuscules = "AÀÁBCÇDEÈÉFGHIÏÍJKLMNÑOÒÓPQRSTUÜÚVWXYZ".toCharArray();
     public static void main(String[] args){
-        String text1 = "ABC";
-        String text2 = "XYZ";
-        String text3 = "Hola, Mr. calçot";
-        String text4 = "Perdó, per tu què és?";
+        String[] llistaText = new String[4];
+        String text1 = "ABC"; llistaText[0] = text1;
+        String text2 = "XYZ"; llistaText[1] = text2;
+        String text3 = "Hola, Mr. calçot"; llistaText[2] = text3;
+        String text4 = "Perdó, per tu què és?"; llistaText[3] = text4;
+
+        System.out.println("Xifrat");
+        System.out.println("------");
+        for(int i = 0; i < 4 ; i++){
+            System.out.println(llistaText[i] + "              =>" + xifraRot13(llistaText[i]));
+        }
         
-        
+        System.out.println("---------");
+        System.out.println("Desxifrat");
+        System.out.println("---------");
+        for(int i = 0; i < 4 ; i++){
+            System.out.println(xifraRot13(llistaText[i]) + "              =>" + desxifraRot13(xifraRot13(llistaText[i])));
+        }
     }
     public static String xifraRot13(String text){
         String textNou = "";
@@ -54,17 +66,13 @@ public class Rot13 {
 
     public static int cercaIndex(char c, boolean desxifrar){
         int numero = 0;
-        for(int i = 0; i < 37; i++){
-            if(abecedariMajuscules[i] == c){ 
+        for(int i = 0; i < abecedariMinuscules.length; i++){
+            if(abecedariMajuscules[i] == c || abecedariMinuscules[i] == c){ 
                 numero = i; 
                 break;
             }
-            if(abecedariMinuscules[i] == c){
-                 numero = i; 
-                 break;
-            }
         }
-        if(desxifrar == true){
+        if(desxifrar){
             numero -= 13;
             while(numero < 0){
                 numero += 38;
