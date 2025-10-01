@@ -5,7 +5,7 @@ public class RotX {
     public static void main(String[] args){
         String[] llistaText = new String[]{"ABC", "XYZ", "Hola, Mr. calçot", "Perdó, per tu què és?"};
         String[] llistaXifrada = new String[llistaText.length];
-        int desplaçament = 50;
+        int desplaçament = 0;
         int desplaçamentInicial = desplaçament;
         System.out.println("Xifrat");
         System.out.println("------");
