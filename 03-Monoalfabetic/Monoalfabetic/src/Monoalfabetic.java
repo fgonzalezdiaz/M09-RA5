@@ -6,7 +6,7 @@ public class Monoalfabetic {
     final static char[] abecedariMajuscules = "AÀÁBCÇDEÈÉFGHIÏÍJKLMNÑOÒÓPQRSTUÜÚVWXYZ".toCharArray();
     final static ArrayList<Character> llistaPermutada = permutaAlfabet(abecedariMajuscules);
     public static void main(String[] args){
-        String cadena = "PROVA Prova prova 12345 ____ TeXtVa Riat";
+        String cadena = "1234 ,,, ... --- PROVA prova ProvA '''''' ";
 
         System.out.println("XIFRAM LA SEGÜENT CADENA => " + cadena);
         cadena = xifraMonoAlfa(cadena);
