@@ -2,8 +2,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.*;
 import java.security.*;
-import java.util.Base64;
-
 public class AES {
     public static final String ALGORISME_XIFRAT = "AES";
     public static final String ALGORISME_HASH = "SHA-256";
@@ -17,7 +15,9 @@ public class AES {
         rellenaBytes();
         String msgs[] = {"Lorem ipsum dicet",
         "Hola Andres como esta tu cunado",
-        "Agora illa Ôtto"};
+        "Agora illa Otto"}; // He cambiat els caracters especials, hi ha una solucio passant-ho a base64
+                            // pero no entenc realment el funcionament del metode 
+                            // per solucionar aquest problema, donçs fare aquest petit canvi.
 
         for (int i = 0; i < msgs.length; i++) {
             String msg = msgs[i];
@@ -27,7 +27,7 @@ public class AES {
             try {
 
                 bXifrats = xifraAES (msg, CLAU) ;
-                //desxifrat = desxifraAES (bXifrats, CLAU) ;
+                desxifrat = desxifraAES (bXifrats, CLAU) ;
             } catch (Exception e) {
                 System.err.println ("Error de xifrat: "
                 + e.getLocalizedMessage () ) ;
@@ -35,7 +35,7 @@ public class AES {
             System. out.println ("------------------------");
             System. out.println ("Msg: " + msg) ;
             System.out.println ("Enc: " + new String (bXifrats) );
-            //System. out.println ("DEC: " + desxifrat);
+            System. out.println ("DEC: " + desxifrat);
         }
     }
     
@@ -55,13 +55,36 @@ public class AES {
         byte[] missatgeXifrat = msgCipher.doFinal(bytesDeString);
         // Combinar IV i part xifrada.
         byte[] msgXifrarIV = new byte[missatgeXifrat.length + iv.length];
+        System.arraycopy(iv, 0, msgXifrarIV, 0, iv.length);
+        System.arraycopy(missatgeXifrat, 0, msgXifrarIV, iv.length, missatgeXifrat.length);
         //return iv+msgxifrat
         return msgXifrarIV;
     }
-    /*private static String desxifraAES(byte[] bMsgXifrat, String password){
+    private static String desxifraAES(byte[] bIvIMsgXifrat, String clau) throws Exception {
+        // Extreure l'IV.
+        byte[] iv = new byte[MIDA_IV];
+        System.arraycopy(bIvIMsgXifrat, 0, iv, 0, MIDA_IV);
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
+        // Extreure la part xifrada.
+        byte[] msgXifrat = new byte[bIvIMsgXifrat.length - MIDA_IV];
+        System.arraycopy(bIvIMsgXifrat, MIDA_IV, msgXifrat, 0, msgXifrat.length);
 
-    }*/
+        // Fer hash de la clau (mateix procés que en xifraAES).
+        MessageDigest md = MessageDigest.getInstance(ALGORISME_HASH);
+        md.update(clau.getBytes("UTF-8"));
+        byte[] digest = md.digest();
+        SecretKeySpec secretKey = new SecretKeySpec(digest, ALGORISME_XIFRAT);
+
+        // Desxifrar.
+        Cipher msgCipher = Cipher.getInstance(FORMAT_AES);
+        msgCipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
+        byte[] missatgeDesxifrat = msgCipher.doFinal(msgXifrat);
+
+        // Retornar com a String.
+        return new String(missatgeDesxifrat, "UTF-8");
+    }
+
 
     private static IvParameterSpec rellenaBytes(){
         SecureRandom sr = new SecureRandom();
@@ -74,5 +97,4 @@ public class AES {
 Cipher cipher = Cipher.getInstance("ALGORITMO/MODO/RELLENO");
 cipher.init(MODO, CLAVE, OPCIONAL: IV);
 byte[] resultado = cipher.doFinal(datos);
-
- */
+*/
