@@ -15,7 +15,10 @@ public class Hashes {
     char[] charset = "abcdefABCDEF1234567890!".toCharArray();
 public static void main(String[] args) throws Exception {
     String salt = "qpoweiruamslkdfjz";
-    String pw = "aaabF!";
+    String pw = "aabbF!";
+    //String pw = "aaaaaa"; //Password contrasenya per proves curtes
+    //String pw = "!" // Password contrasenya per proves molt llarga
+    //String pw = "ccccc";
 
     Hashes h = new Hashes();
 
@@ -41,6 +44,8 @@ public static void main(String[] args) throws Exception {
         System.out.printf("Temps: %s%n", h.getInterval(t1, t2)); // suposem que getInterval formata el temps
         System.out.printf("Contrasenya trobada: %s%n", pwTrobat);
         System.out.println("----------------------------------------\n");
+        double segons = (t2 - t1) / 1000.0;
+        System.out.println("Temps: " + segons + " segons");
     }
 }
 
@@ -69,16 +74,31 @@ public static void main(String[] args) throws Exception {
     }
 
     public String forcaBruta(String alg, String hash, String salt)throws Exception{
-
-        char[] charset = "abcdefABCDEF1234567890!".toCharArray();
+        char[] contrasenya1 = new char[6];
         for (int i = 0; i < charset.length; i++) {
+            npass++;
+            contrasenya1[0] = charset[i];
+            if(comprovaPasswd(contrasenya1, 1, hash, alg, salt)) return "Contrasenya trobada " + charToString(contrasenya1, 1);
             for (int j = 0; j < charset.length; j++) {
+                npass++;
+                contrasenya1[1] = charset[j];
+                if(comprovaPasswd(contrasenya1, 2, hash, alg, salt)) return "Contrasenya trobada " + charToString(contrasenya1, 2);
                 for (int k = 0; k < charset.length; k++) {
+                        npass++;
+                        contrasenya1[2] = charset[k];
+                        if(comprovaPasswd(contrasenya1, 3, hash, alg, salt)) return "Contrasenya trobada " + charToString(contrasenya1, 3);
                     for (int l = 0; l < charset.length; l++) {
+                        npass++;    
+                        contrasenya1[3] = charset[l];
+                        if(comprovaPasswd(contrasenya1, 4, hash, alg, salt)) return "Contrasenya trobada " + charToString(contrasenya1, 4);
                         for (int m = 0; m < charset.length; m++) {
+                            npass++;
+                            contrasenya1[4] = charset[m];
+                            if(comprovaPasswd(contrasenya1, 5, hash, alg, salt)) return "Contrasenya trobada " + charToString(contrasenya1, 5);
                             for (int n = 0; n < charset.length; n++) {
-                                    String contrasenya = charset[i] + charset[j] + charset[k] + charset[l] + charset[m] + charset[n] + "";
-                                    if()
+                                    contrasenya1[5] = charset[n];
+                                    if(comprovaPasswd(contrasenya1,6 , hash, alg, salt)) return "Contrasenya trobada " + charToString(contrasenya1 ,6);
+                                    npass++;
                             }
                         }
                     }
@@ -87,10 +107,26 @@ public static void main(String[] args) throws Exception {
         }
         return "Contrasenya NO desencriptada";
 
+
     }
 
-    public boolean comprovaPasswd(String pw, String hash, String alg, String salt)throws Exception{
-        String pwHash = alg.equals("SHA-512") ? getSHA512AmbSalt(pw, salt) : getPBKDF2AmbSalt(pw, salt);
+    public String charToString(char[] contrasenya, int longitud){
+        String contr = "";
+        for(int i = 0; i < longitud; i++){
+            contr += contrasenya[i];
+        }
+        return contr;
+    }
+
+    public boolean comprovaPasswd(char[] passw, int len, String hash, String alg, String salt) throws Exception {
+        // crea la String de forma eficiente en una única operación
+        String pw = new String(passw, 0, len);
+        String pwHash;
+        if ("SHA-512".equals(alg)) {
+            pwHash = getSHA512AmbSalt(pw, salt);
+        } else {
+            pwHash = getPBKDF2AmbSalt(pw, salt);
+        }
         return pwHash.equals(hash);
     }
 

@@ -6,6 +6,7 @@ public class Proves {
         char[] charset = "abcdefABCDEF1234567890!".toCharArray();
 
         for (int i = 0; i < charset.length; i++) {
+            
             for (int j = 0; j < charset.length && 1 == 1 ; j++) {
                 for (int k = 0; k < charset.length; k++) {
                     for (int l = 0; l < charset.length; l++) {
